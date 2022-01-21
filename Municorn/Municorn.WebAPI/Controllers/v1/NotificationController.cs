@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,10 +8,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 using Municorn.Infrastructure.Commands;
-using Municorn.Infrastructure.Enums;
 using Municorn.Infrastructure.Queries;
 using Municorn.Infrastructure.Requests;
-using Municorn.Infrastructure.Responses;
 
 namespace Municorn.WebAPI.Controllers.v1
 {
@@ -41,7 +38,7 @@ namespace Municorn.WebAPI.Controllers.v1
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [HttpGet]
-        public async Task<ActionResult<NotificationStatus>> GetNotificationStatusById([FromQuery][Required][StringLength(50)] string id, [FromRoute][Required] int version = 1)
+        public async Task<ObjectResult> GetNotificationStatusById([FromQuery][Required][StringLength(50)] string id, [FromRoute][Required] int version = 1)
         {
             var query = new GetNotificationStatusQuery(id);
             var response = await _mediator.Send(query);
@@ -61,7 +58,7 @@ namespace Municorn.WebAPI.Controllers.v1
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [HttpPost("android")]
-        public async Task<ActionResult<CreateNotificationResponse>> CreateAndSendNotification([FromBody][Required] CreateAndroidNotificationRequest request, [FromRoute][Required] int version = 1)
+        public async Task<ObjectResult> CreateAndSendNotification([FromBody][Required] CreateAndroidNotificationRequest request, [FromRoute][Required] int version = 1)
         {
             var command = new CreateAndroidNotificationCommand(request);
             var response = await _mediator.Send(command);
@@ -81,7 +78,7 @@ namespace Municorn.WebAPI.Controllers.v1
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [HttpPost("iOS")]
-        public async Task<ActionResult<IEnumerable<string>>> CreateAndSendNotification([FromBody][Required] CreateiOSNotificationRequest request, [FromRoute][Required] int version = 1)
+        public async Task<ObjectResult> CreateAndSendNotification([FromBody][Required] CreateiOSNotificationRequest request, [FromRoute][Required] int version = 1)
         {
             var command = new CreateiOSNotificationCommand(request);
             var response = await _mediator.Send(command);

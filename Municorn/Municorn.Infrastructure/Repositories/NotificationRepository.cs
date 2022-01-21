@@ -36,10 +36,10 @@ namespace Municorn.Infrastructure.Repositories
 
                 return result.Status;
             }
-            catch (DbUpdateException ex)
+            catch (InvalidOperationException ex)
             {
                 _logger.LogError(ex, "Ошибка поиска в БД уведомления");
-                throw new InvalidOperationException("Ошибка поиска в БД уведомления", ex);
+                throw;
             }
         }
 
