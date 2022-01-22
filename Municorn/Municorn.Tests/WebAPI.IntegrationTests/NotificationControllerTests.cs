@@ -15,6 +15,7 @@ using Municorn.Infrastructure.Handlers;
 using Municorn.Infrastructure.Interfaces;
 using Municorn.Infrastructure.Queries;
 using Municorn.Infrastructure.Requests;
+using Municorn.Infrastructure.Services;
 using Municorn.WebAPI.Controllers.v1;
 
 using Xunit;
@@ -28,13 +29,13 @@ namespace Municorn.Tests.WebAPI.IntegrationTests
         {
             // Arrange
             var mediatrMock = new Mock<IMediator>();
-            var mockRepo = new Mock<INotificationRepository>();
+            var mockRepository = new Mock<INotificationRepository>();
             var existingNotificationId = Guid.Empty.ToString();
             var status = NotificationStatus.Delivered;
-            mockRepo.Setup(repo => repo.GetNotificationStatusByIdAsync(existingNotificationId)).ReturnsAsync(status);
+            mockRepository.Setup(repo => repo.GetNotificationStatusByIdAsync(existingNotificationId)).ReturnsAsync(status);
             mediatrMock.Setup(m => m.Send(It.IsAny<GetNotificationStatusQuery>(), It.IsAny<CancellationToken>())).Returns<GetNotificationStatusQuery, CancellationToken>((command, cancellationToken) =>
             {
-                var cqHandler = new GetNotificationStatusQueryHandler(mockRepo.Object);
+                var cqHandler = new GetNotificationStatusQueryHandler(mockRepository.Object);
                 return cqHandler.Handle(command, cancellationToken);
             });
             var controller = new NotificationController(mediatrMock.Object);
@@ -53,12 +54,12 @@ namespace Municorn.Tests.WebAPI.IntegrationTests
         {
             // Arrange
             var mediatrMock = new Mock<IMediator>();
-            var mockRepo = new Mock<INotificationRepository>();
+            var mockRepository = new Mock<INotificationRepository>();
             var notExistingNotificationId = Guid.Empty.ToString();
-            mockRepo.Setup(repo => repo.GetNotificationStatusByIdAsync(notExistingNotificationId)).Throws(new InvalidOperationException("Ёлемент не найден"));
+            mockRepository.Setup(repo => repo.GetNotificationStatusByIdAsync(notExistingNotificationId)).Throws(new InvalidOperationException("Ёлемент не найден"));
             mediatrMock.Setup(m => m.Send(It.IsAny<GetNotificationStatusQuery>(), It.IsAny<CancellationToken>())).Returns<GetNotificationStatusQuery, CancellationToken>((command, cancellationToken) =>
             {
-                var cqHandler = new GetNotificationStatusQueryHandler(mockRepo.Object);
+                var cqHandler = new GetNotificationStatusQueryHandler(mockRepository.Object);
                 return cqHandler.Handle(command, cancellationToken);
             });
             var controller = new NotificationController(mediatrMock.Object);
@@ -75,14 +76,14 @@ namespace Municorn.Tests.WebAPI.IntegrationTests
         public async Task SaveNotification_AndoroidNotification_Success()
         {
             // Arrange
-            var request = new CreateAndroidNotificationRequest() { DeviceToken = "DeviceToken", Message = "Message", Title = "Title" };
+            var request = new CreateAndroidNotificationRequest() { DeviceToken = "SaveNotification_AndoroidNotification_Success", Message = "Message", Title = "Title" };
             var mediatrMock = new Mock<IMediator>();
-            var mockRepo = new Mock<INotificationRepository>();
-            var mockManager = new Mock<INotificationManager<CreateAndroidNotificationRequest>>();
+            var repository = CommonSut.GetInMemoryNotificationRepository();
+            var sender = new AndroidNotificationSender(new Mock<ILogger<AndroidNotificationSender>>().Object);
 
             mediatrMock.Setup(m => m.Send(It.IsAny<CreateAndroidNotificationCommand>(), It.IsAny<CancellationToken>())).Returns<CreateAndroidNotificationCommand, CancellationToken>((command, cancellationToken) =>
             {
-                var cqHandler = new CreateAndroidNotificationCommandHandler(new Mock<ILogger<CreateAndroidNotificationCommandHandler>>().Object, mockManager.Object, mockRepo.Object);
+                var cqHandler = new CreateAndroidNotificationCommandHandler(new Mock<ILogger<CreateAndroidNotificationCommandHandler>>().Object, sender, repository);
                 return cqHandler.Handle(command, cancellationToken);
             });
 
@@ -95,6 +96,5 @@ namespace Municorn.Tests.WebAPI.IntegrationTests
             var viewResult = Assert.IsType<ObjectResult>(response);
             Assert.Equal(201, response.StatusCode);
         }
-
     }
 }

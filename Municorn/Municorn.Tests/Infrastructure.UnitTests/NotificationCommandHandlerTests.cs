@@ -12,17 +12,17 @@ using Xunit;
 
 namespace Municorn.Tests.Infrastructure.UnitTests
 {
-    public class CreateAndroidNotificationCommandHandlerTests
+    public class NotificationCommandHandlerTests
     {
         [Fact]
         public async Task CreateAndroidNotificationCommandHandler_Handle_ReturnSuccess()
         {
             // Arrange
-            var mediatrMock = new AndroidNotificationManager(new Mock<ILogger<AndroidNotificationManager>>().Object);
-            var request = new CreateAndroidNotificationRequest() { DeviceToken = "DeviceToken", Message = "Message", Title = "Title" };
+            var sender = new AndroidNotificationSender(new Mock<ILogger<AndroidNotificationSender>>().Object);
+            var request = new CreateAndroidNotificationRequest() { DeviceToken = "CreateAndroidNotificationCommandHandler", Message = "Message", Title = "Title" };
 
             // Act
-            var response = await mediatrMock.SendNotificationAsync(request);
+            var response = await sender.SendNotificationAsync(request);
 
             // Assert
             Assert.Equal(NotificationStatus.Sent, response);

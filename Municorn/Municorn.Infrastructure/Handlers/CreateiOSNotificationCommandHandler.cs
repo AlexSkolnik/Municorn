@@ -14,21 +14,21 @@ namespace Municorn.Infrastructure.Handlers
 {
     public record CreateiOSNotificationCommandHandler : CreateNotificationBaseCommandHandler<CreateiOSNotificationCommand, CreateiOSNotificationRequest>
     {
-        private readonly INotificationManager<CreateiOSNotificationRequest> _iOSNotificationManager;
+        private readonly INotificationSender<CreateiOSNotificationRequest> _iOSNotificationSender;
 
         public CreateiOSNotificationCommandHandler(
             ILogger<CreateiOSNotificationCommandHandler> logger,
-            INotificationManager<CreateiOSNotificationRequest> iOSNotificationManager,
+            INotificationSender<CreateiOSNotificationRequest> iOSNotificationSender,
             INotificationRepository notificationRepository
             ) : base(logger, notificationRepository)
         {
-            _iOSNotificationManager = iOSNotificationManager ?? throw new ArgumentNullException(nameof(iOSNotificationManager));
+            _iOSNotificationSender = iOSNotificationSender ?? throw new ArgumentNullException(nameof(iOSNotificationSender));
         }
 
         public override NotificationDto CreateNotificationDtoFromCommandData(CreateiOSNotificationRequest data)
             => new(data.Id, JsonSerializer.Serialize(data), NotificationType.iOS);
 
         public override async Task<NotificationStatus> SendNotificationAsync(CreateiOSNotificationRequest data)
-            => await _iOSNotificationManager.SendNotificationAsync(data);
+            => await _iOSNotificationSender.SendNotificationAsync(data);
     }
 }

@@ -9,11 +9,11 @@ using Municorn.Infrastructure.Requests;
 
 namespace Municorn.Infrastructure.Services
 {
-    public class AndroidNotificationManager : INotificationManager<CreateAndroidNotificationRequest>
+    public class AndroidNotificationSender : INotificationSender<CreateAndroidNotificationRequest>
     {
-        protected readonly ILogger<AndroidNotificationManager> _logger;
+        protected readonly ILogger<AndroidNotificationSender> _logger;
 
-        public AndroidNotificationManager(ILogger<AndroidNotificationManager> logger)
+        public AndroidNotificationSender(ILogger<AndroidNotificationSender> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

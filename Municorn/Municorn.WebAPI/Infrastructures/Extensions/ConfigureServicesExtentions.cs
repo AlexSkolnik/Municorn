@@ -85,8 +85,8 @@ namespace Municorn.WebAPI.Infrastructures.Extensions
 
         public static IServiceCollection ConfigureCustomServices(this IServiceCollection services)
         {
-            services.AddSingleton<INotificationManager<CreateiOSNotificationRequest>, IOSNotificationManager>();
-            services.AddSingleton<INotificationManager<CreateAndroidNotificationRequest>, AndroidNotificationManager>();
+            services.AddSingleton<INotificationSender<CreateiOSNotificationRequest>, IOSNotificationSender>();
+            services.AddSingleton<INotificationSender<CreateAndroidNotificationRequest>, AndroidNotificationSender>();
 
             return services;
         }

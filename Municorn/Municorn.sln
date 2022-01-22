@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municorn.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municorn.DAL", "Municorn.DAL\Municorn.DAL.csproj", "{FBD67B43-96B8-49B6-90B5-20E4568DCA5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Municorn.Tests", "Municorn.Tests\Municorn.Tests.csproj", "{EB176F42-4B3E-4EAA-971B-BC582D7F6CA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Municorn.Tests", "Municorn.Tests\Municorn.Tests.csproj", "{EB176F42-4B3E-4EAA-971B-BC582D7F6CA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

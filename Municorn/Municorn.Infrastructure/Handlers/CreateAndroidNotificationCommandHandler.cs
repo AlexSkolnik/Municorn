@@ -14,21 +14,21 @@ namespace Municorn.Infrastructure.Handlers
 {
     public record CreateAndroidNotificationCommandHandler : CreateNotificationBaseCommandHandler<CreateAndroidNotificationCommand, CreateAndroidNotificationRequest>
     {
-        private readonly INotificationManager<CreateAndroidNotificationRequest> _androidNotificationManager;
+        private readonly INotificationSender<CreateAndroidNotificationRequest> _androidNotificationSender;
 
         public CreateAndroidNotificationCommandHandler(
             ILogger<CreateAndroidNotificationCommandHandler> logger,
-            INotificationManager<CreateAndroidNotificationRequest> androidNotificationManager,
+            INotificationSender<CreateAndroidNotificationRequest> androidNotificationSender,
             INotificationRepository notificationRepository
             ) : base(logger, notificationRepository)
         {
-            _androidNotificationManager = androidNotificationManager ?? throw new ArgumentNullException(nameof(androidNotificationManager));
+            _androidNotificationSender = androidNotificationSender ?? throw new ArgumentNullException(nameof(androidNotificationSender));
         }
 
         public override NotificationDto CreateNotificationDtoFromCommandData(CreateAndroidNotificationRequest data)
             => new(data.Id, JsonSerializer.Serialize(data), NotificationType.Android);
 
         public override async Task<NotificationStatus> SendNotificationAsync(CreateAndroidNotificationRequest data)
-            => await _androidNotificationManager.SendNotificationAsync(data);
+            => await _androidNotificationSender.SendNotificationAsync(data);
     }
 }

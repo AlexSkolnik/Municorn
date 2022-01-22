@@ -9,11 +9,11 @@ using Municorn.Infrastructure.Requests;
 
 namespace Municorn.Infrastructure.Services
 {
-    public class IOSNotificationManager : INotificationManager<CreateiOSNotificationRequest>
+    public class IOSNotificationSender : INotificationSender<CreateiOSNotificationRequest>
     {
-        protected readonly ILogger<IOSNotificationManager> _logger;
+        protected readonly ILogger<IOSNotificationSender> _logger;
 
-        public IOSNotificationManager(ILogger<IOSNotificationManager> logger)
+        public IOSNotificationSender(ILogger<IOSNotificationSender> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
